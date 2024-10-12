@@ -86,6 +86,12 @@ function filter_core_get_initialized_plugin_system()
     return $fw;
 }
 
+/*
+ * XXX A lot of issues here, for details see:
+ * https://github.com/opnsense/core/issues/7372
+ * Until a better solution is found, only the LAN interface is
+ * eligibile for the anti lockout rule
+*/
 function filter_core_get_antilockout()
 {
     global $config;
@@ -95,7 +101,7 @@ function filter_core_get_antilockout()
     }
 
     $lockout_if = get_primary_interface_from_list(array_keys(legacy_config_get_interfaces(['virtual' => false])));
-    if (empty($lockout_if)) {
+    if ("lan" !== $lockout_if) {
         return [];
     }
 
